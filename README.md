@@ -13,11 +13,11 @@
 
 | Service | URL | Access Notes |
 | :--- | :--- | :--- |
-| ⚡ **Direct Live Demo URL** | [https://implementing-lee-patricia-cool.trycloudflare.com](https://implementing-lee-patricia-cool.trycloudflare.com) | **Direct Instant Access** (No IP / No Password required) |
-| 🌐 **Alternative Live Tunnel** | [https://taskpulse-prabhavathi.loca.lt](https://taskpulse-prabhavathi.loca.lt) | Tunnel backup (Host IP: `103.160.27.42`) |
+| 🚀 **Live Demo (Render)** | [https://taskpulse-django.onrender.com](https://taskpulse-django.onrender.com) | **Permanent Live URL** — Always accessible |
 | 💻 **Local Dashboard** | [http://localhost:8000/](http://localhost:8000/) | Local sprint metrics, search & filter |
-| 🩺 **Health Check** | [http://127.0.0.1:8000/health/](http://127.0.0.1:8000/health/) | JSON health status probe |
-| ⚙️ **Django Admin** | [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) | Administrative management portal |
+| 🩺 **Health Check (Live)** | [https://taskpulse-django.onrender.com/health/](https://taskpulse-django.onrender.com/health/) | JSON health status probe |
+| 🩺 **Health Check (Local)** | [http://127.0.0.1:8000/health/](http://127.0.0.1:8000/health/) | Local JSON health status probe |
+| ⚙️ **Django Admin (Live)** | [https://taskpulse-django.onrender.com/admin/](https://taskpulse-django.onrender.com/admin/) | Administrative management portal |
 
 ---
 
