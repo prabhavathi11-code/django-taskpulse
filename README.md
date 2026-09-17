@@ -63,7 +63,7 @@
 ## 📂 Project Directory Structure
 
 ```text
-django/
+TaskPulse/
 ├── .github/
 │   └── workflows/
 │       └── django-ci.yml        # GitHub Actions CI matrix pipeline
