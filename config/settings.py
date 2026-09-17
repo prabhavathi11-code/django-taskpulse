@@ -31,6 +31,9 @@ ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     'https://*.onrender.com',
     'https://*.vercel.app',
+    'https://*.trycloudflare.com',   # Cloudflare quick-tunnel support
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 ]
 
 
