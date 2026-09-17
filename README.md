@@ -101,6 +101,57 @@ django/
 
 ---
 
+## 🗄️ Database Architecture & Schema
+
+The core data model is [`Task`](file:///c:/Users/ch%20prabahavathi/OneDrive/Desktop/django/tasks/models.py) which encapsulates engineering sprint workflows:
+
+| Field | Type | Attributes & Choices | Purpose |
+| :--- | :--- | :--- | :--- |
+| `title` | `CharField(200)` | Required, indexed | Short descriptive task title |
+| `description` | `TextField` | Optional (`blank=True`) | Detailed acceptance criteria & context |
+| `status` | `CharField(20)` | `pending` (default), `completed` | Workflow lifecycle tracking |
+| `priority` | `CharField(20)` | `low`, `medium` (default), `high` | Task urgency ranking |
+| `category` | `CharField(20)` | `work`, `personal`, `dev`, `design` | Functional domain categorization |
+| `due_date` | `DateField` | Optional (`null=True`, `blank=True`) | Target completion date |
+| `created_at` | `DateTimeField` | Auto-set on create (`auto_now_add=True`) | Audit trail & sorting |
+| `updated_at` | `DateTimeField` | Auto-set on save (`auto_now=True`) | Modification timestamp |
+
+> **⚡ Performance Optimization:** Database indexes (`models.Index`) are applied across `status`, `priority`, `category`, and `created_at` for high-concurrency filtering.
+
+---
+
+## 🧪 Automated Testing & Quality Assurance
+
+TaskPulse includes an automated test suite in [`tasks/tests.py`](file:///c:/Users/ch%20prabahavathi/OneDrive/Desktop/django/tasks/tests.py) covering 10 distinct test scenarios:
+
+```bash
+# Run test suite
+python manage.py test
+```
+
+- ✅ `test_task_creation_and_string_representation`: Validates model integrity and `__str__` format.
+- ✅ `test_dashboard_renders_metrics_and_tasks`: Checks dashboard status `200 OK` and template context metrics.
+- ✅ `test_task_create_view_post`: Tests task creation flow and automatic redirection.
+- ✅ `test_task_update_view`: Tests updating existing task metadata and fields.
+- ✅ `test_task_delete_view`: Confirms deletion and count reduction.
+- ✅ `test_task_toggle_status`: Validates `@require_POST` fast status toggling between `pending` and `completed`.
+- ✅ `test_filter_tasks_by_status`: Ensures status query filtering returns accurate subsets.
+- ✅ `test_filter_tasks_by_priority`: Validates priority filtering logic.
+- ✅ `test_search_tasks_by_query`: Tests case-insensitive search across title and description.
+- ✅ `test_health_check_endpoint`: Verifies `/health/` returns JSON `200 OK` with database health status.
+
+---
+
+## 🎤 Interview & Project Presentation Guide
+
+### Key Points to Highlight:
+1. **MVT Architecture:** Clean separation of concerns between Models (ORM schema & indexes), Views (method guards & query sets), and Templates (semantic glassmorphism).
+2. **Security Practices:** CSRF validation across all endpoints, strict HTTP method decorators (`@require_POST`), and parameterized ORM queries preventing SQL injection.
+3. **Responsive Glassmorphism:** Crafted with CSS variables, backdrop blur filters, and micro-animations without heavy CSS framework bloat.
+4. **DevOps Ready:** Built with WhiteNoise manifest compression, Gunicorn WSGI, GitHub Actions CI matrix, and live cloud deployment blueprints.
+
+---
+
 ## 👤 Author & Contact
 
 - **Developer**: Prabhavathi Chirumala
