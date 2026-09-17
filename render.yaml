@@ -2,14 +2,14 @@ services:
   - type: web
     name: taskpulse-django
     env: python
-    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate"
+    buildCommand: "pip install -r requirements.txt && python manage.py migrate && python manage.py seed_sample_data && python manage.py collectstatic --no-input"
     startCommand: "gunicorn config.wsgi:application"
     envVars:
       - key: PYTHON_VERSION
-        value: 3.14.7
+        value: 3.12.8
       - key: SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
-        value: ".onrender.com"
+        value: "*"
