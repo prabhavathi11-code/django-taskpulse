@@ -42,8 +42,15 @@ class Task(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['status']),
+            models.Index(fields=['priority']),
+            models.Index(fields=['category']),
+            models.Index(fields=['-created_at']),
+        ]
 
     def __str__(self):
+
         return self.title
 
     @property

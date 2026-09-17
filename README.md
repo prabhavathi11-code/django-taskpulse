@@ -1,155 +1,102 @@
-# ⚡ TaskPulse — Modern Full-Stack Django Web Application
+# ⚡ TaskPulse — Django Project & Task Manager
 
 [![Django CI/CD Pipeline](https://github.com/prabhavathi11-code/django-taskpulse/actions/workflows/django-ci.yml/badge.svg)](https://github.com/prabhavathi11-code/django-taskpulse/actions)
 ![Python Version](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue)
 ![Django](https://img.shields.io/badge/Django-6.1-green)
 ![License](https://img.shields.io/badge/license-MIT-purple)
-![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg)
 
-A production-grade, full-stack **Django 6.1** web application engineered for tracking engineering sprints, daily productivity, and project milestones. Features real-time completion analytics, dynamic multi-attribute filtering, glassmorphic dark UI, automated unit testing, and continuous deployment pipelines (CI/CD).
-
----
-
-## 📖 About The Project
-
-In fast-paced software development and agile workflows, teams and developers often struggle with complex, bloated project management software. **TaskPulse** provides a lightweight, blazingly fast, and aesthetically pleasing task management dashboard.
-
-### Why TaskPulse?
-- **Zero Configuration Friction**: Built-in sample data seeding allows developers to test features with a single command.
-- **Enterprise-Grade Architecture**: Strictly adheres to Django's **MVT (Model-View-Template)** pattern with decoupled logic, reusable components, and comprehensive unit tests.
-- **Cloud-Native & Production-Ready**: Comes preconfigured with **WhiteNoise** for compressed static asset serving, **Gunicorn** WSGI HTTP server, and automatic **Render / Railway** blueprint deployment.
-
----
-
-## 🧠 Key Skills & Technologies Demonstrated
-
-| Category | Skills & Tools Used |
-| :--- | :--- |
-| **Backend Engineering** | Python 3.14, Django 6.1, Django MVT, Django ORM, RESTful JSON health endpoint |
-| **Frontend Development** | HTML5 Semantic layout, Vanilla CSS3 (Glassmorphism, CSS Custom Properties/Variables, Flexbox/Grid), JavaScript (DOM, Modals, Toasts) |
-| **Testing & Quality Assurance** | Django Test Framework, Automated Unit Tests (10/10 passing), System checks |
-| **DevOps & CI/CD** | Git Version Control, GitHub Actions Workflow Matrix, Automated testing on push/PR |
-| **Production Serving** | WhiteNoise 6.12 (Manifest Static Storage & Gzip/Brotli compression), Gunicorn 26.2 |
-| **Deployment** | `render.yaml` infrastructure-as-code, `Procfile`, `.env` configuration |
-
----
-
-## ✨ Features & Capabilities
-
-- **📊 Live Sprint Metrics**: Dynamically calculated metrics banner displaying total tasks, completed tasks, pending/in-progress counts, and high-priority alarms with an animated completion rate bar.
-- **⚡ Quick One-Click Actions**: Toggle task completion status (`Pending` ↔ `Completed`) with a single click, open quick-add modal, or perform inline edits and safe deletion.
-- **🔍 Multi-Factor Search & Filtering**:
-  - Full-text search across titles and descriptions.
-  - Status filter: `All`, `Pending`, `In Progress`, `Completed`.
-  - Priority filter: `Low`, `Medium`, `High`.
-  - Category filter: `Work`, `Personal`, `Development`, `Design`, `Other`.
-- **🎨 Glassmorphic Dark UI**: High-contrast, accessibility-aware dark mode with translucent acrylic cards (`backdrop-filter: blur(12px)`), vibrant neon accents, and micro-animations.
-- **🩺 Health & Uptime Probe**: Lightweight JSON endpoint at `/health/` for synthetic monitoring and load balancer health checks.
-
----
-
-## 🗄️ Data Architecture & Schema
-
-The core model is defined in `tasks/models.py`:
-
-```
-+-------------------------------------------------------------+
-|                            Task                             |
-+-------------------------------------------------------------+
-| id          : BigAutoField (Primary Key)                    |
-| title       : CharField(max_length=200)                     |
-| description : TextField(blank=True)                         |
-| priority    : CharField(choices: LOW, MEDIUM, HIGH)         |
-| status      : CharField(choices: PENDING, IN_PROGRESS, ...) |
-| category    : CharField(choices: Work, Personal, Dev, ...)  |
-| due_date    : DateField(null=True, blank=True)              |
-| created_at  : DateTimeField(auto_now_add=True)              |
-| updated_at  : DateTimeField(auto_now=True)                  |
-+-------------------------------------------------------------+
-```
-
-### Model Properties:
-- `is_completed`: Returns boolean based on whether task status is `COMPLETED`.
-- `is_overdue`: Compares `due_date` against `timezone.now().date()` to flag delayed deliverables.
-
----
-
-## 🔗 URL Routing & API Endpoints
-
-| Endpoint | HTTP Method | View Function | Description |
-| :--- | :--- | :--- | :--- |
-| `/` | `GET` | `tasks:list` | Main interactive dashboard with metrics & filters |
-| `/tasks/create/` | `GET`, `POST` | `tasks:create` | Form page to create a new task |
-| `/tasks/<id>/edit/` | `GET`, `POST` | `tasks:update` | Update details of an existing task |
-| `/tasks/<id>/delete/`| `GET`, `POST` | `tasks:delete` | Confirmation and deletion of task |
-| `/tasks/<id>/toggle/`| `POST` | `tasks:toggle` | Instant status toggle between Pending & Completed |
-| `/health/` | `GET` | `tasks:health` | JSON health probe (`status`, `database`, `total_tasks`) |
-| `/admin/` | `GET`, `POST` | Django Admin | Administrative management portal |
-
----
-
-## 🛠️ Tech Stack & Dependencies
-
-- **Python**: `3.14.7` (Supports 3.11+)
-- **Django**: `6.1.1`
-- **WSGI Runner**: `Gunicorn 26.2.0`
-- **Static Compression**: `WhiteNoise 6.12.0`
-- **SQL Parser**: `sqlparse 0.6.0`
-- **Database**: SQLite3 (Local) / PostgreSQL Ready (Production)
+**TaskPulse** is a full-stack Django 6.1 web application designed for agile task tracking, engineering sprint management, and productivity metrics. Features a responsive dark glassmorphic UI, real-time analytics, automated testing, and CI/CD deployment workflows.
 
 ---
 
 ## 🔗 Local Host URLs & Application Access
 
-When the development server is running locally, access the application via:
+When the Django development server is running locally (`python manage.py runserver`), access the application at:
 
-- 🌐 **Web App Dashboard**: [http://localhost:8000/](http://localhost:8000/) or [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
-- 🩺 **Health Check Endpoint**: [http://127.0.0.1:8000/health/](http://127.0.0.1:8000/health/)
-- ⚙️ **Django Admin Portal**: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
-
+| Service | Local URL | Description |
+| :--- | :--- | :--- |
+| 🌐 **Main Dashboard** | [http://localhost:8000/](http://localhost:8000/) or [http://127.0.0.1:8000/](http://127.0.0.1:8000/) | Live sprint metrics, search, filter, and task management |
+| 🩺 **Health Check** | [http://127.0.0.1:8000/health/](http://127.0.0.1:8000/health/) | JSON health status probe for uptime monitoring |
+| ⚙️ **Django Admin** | [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) | Administrative management portal |
 
 ---
 
-## 📂 Repository Directory Structure
+## ✨ Key Features
 
-```
+- **📊 Live Sprint Metrics**: Instant progress bar with total, completed, pending, and high-priority counters.
+- **⚡ One-Click Actions**: Quick status toggle (`Pending` ↔ `Completed`), fast task creation modal, inline editing, and deletion.
+- **🔍 Smart Search & Filtering**: Multi-attribute filtering across category (Work, Personal, Development, Design), priority, and status.
+- **🎨 Glassmorphic Dark UI**: Custom CSS3 design system with vibrant accents, responsive cards, and micro-animations.
+- **⚡ Database Optimization**: Database-level indexing on `status`, `priority`, `category`, and `created_at` for high-throughput queries.
+- **🔒 Secure Architecture**: Strict HTTP method guards (`@require_POST`, `@require_http_methods`), CSRF validation, and environment-based settings.
+- **🚀 Production Ready**: Configured with WhiteNoise for compressed static asset serving, Gunicorn WSGI server, and GitHub Actions CI pipeline.
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies Used |
+| :--- | :--- |
+| **Backend** | Python 3.14, Django 6.1.1 (MVT architecture, ORM, ModelForms) |
+| **Frontend** | HTML5 Semantic layout, Vanilla CSS3 (Glassmorphism, CSS variables), JavaScript |
+| **Database** | SQLite3 (Local development) / PostgreSQL ready |
+| **WSGI / Production** | Gunicorn 26.2.0, WhiteNoise 6.12.0 (Manifest static compression) |
+| **CI/CD & DevOps** | Git, GitHub Actions (`.github/workflows/django-ci.yml`), Render Blueprint (`render.yaml`) |
+| **Testing** | Django Test Framework (10/10 automated unit tests passing) |
+
+---
+
+## 🔗 URL Routing Reference
+
+| Endpoint | Method | Handler | Purpose |
+| :--- | :--- | :--- | :--- |
+| `/` | `GET` | `tasks:list` | Main task dashboard with metrics and filters |
+| `/tasks/create/` | `GET`, `POST` | `tasks:create` | Task creation form |
+| `/tasks/<id>/edit/` | `GET`, `POST` | `tasks:update` | Update existing task details |
+| `/tasks/<id>/delete/` | `GET`, `POST` | `tasks:delete` | Confirm and delete task |
+| `/tasks/<id>/toggle/` | `POST` | `tasks:toggle` | Instant completion toggle |
+| `/health/` | `GET` | `tasks:health` | JSON health probe endpoint |
+| `/admin/` | `GET`, `POST` | Django Admin | Secure administrative portal |
+
+---
+
+## 📂 Project Directory Structure
+
+```text
 django/
 ├── .github/
 │   └── workflows/
-│       └── django-ci.yml        # GitHub Actions CI/CD pipeline
+│       └── django-ci.yml        # GitHub Actions CI matrix pipeline
 ├── config/
-│   ├── settings.py              # Environment & WhiteNoise settings
-│   ├── urls.py                  # Main routing entrypoint
-│   ├── wsgi.py                  # WSGI config for Gunicorn
-│   └── asgi.py                  # ASGI config
+│   ├── settings.py              # Environment settings & WhiteNoise config
+│   ├── urls.py                  # Main routing configuration
+│   └── wsgi.py                  # WSGI entrypoint for Gunicorn
 ├── tasks/
-│   ├── admin.py                 # Admin dashboard configuration
-│   ├── apps.py                  # Tasks application configuration
-│   ├── forms.py                 # ModelForm validation rules
-│   ├── models.py                # Task database schema
-│   ├── tests.py                 # 10 Automated unit tests
-│   ├── urls.py                  # App-level routing
-│   ├── views.py                 # Views, metrics calculations & health probe
+│   ├── admin.py                 # Admin dashboard with list_editable
+│   ├── apps.py                  # Django app config
+│   ├── forms.py                 # Form validation & widgets
+│   ├── models.py                # Indexed Task data model
+│   ├── tests.py                 # 10 automated unit tests
+│   ├── urls.py                  # App URL routing
+│   ├── views.py                 # View controllers with HTTP method guards
 │   └── management/
 │       └── commands/
 │           └── seed_sample_data.py # Sample data seeder
 ├── static/
-│   ├── css/
-│   │   └── style.css            # Dark glassmorphic design system
-│   └── js/
-│       └── main.js              # Modal, toasts, and keyboard events
+│   ├── css/style.css            # Glassmorphic dark design system
+│   └── js/main.js               # Modal and toast notification scripts
 ├── templates/
-│   ├── base.html                # Master layout with navbar and footer
+│   ├── base.html                # Responsive layout wrapper
 │   └── tasks/
-│       ├── task_list.html       # Dashboard with metric cards & filters
-│       ├── task_form.html       # Create & edit views
-│       └── task_confirm_delete.html # Safe deletion confirmation
+│       ├── task_list.html       # Interactive dashboard
+│       ├── task_form.html       # Create/edit views
+│       └── task_confirm_delete.html
 ├── .env.example                 # Environment variables template
-├── .gitignore                   # Ignore rules for git
-├── Procfile                     # PaaS process file
+├── .gitignore                   # Git ignore specifications
+├── Procfile                     # Production PaaS process definition
 ├── render.yaml                  # 1-Click Render blueprint
-├── requirements.txt             # Pinned project dependencies
-└── manage.py                    # Django command-line utility
+├── requirements.txt             # Pinned dependency requirements
+└── manage.py                    # Django management script
 ```
 
 ---
@@ -158,5 +105,4 @@ django/
 
 - **Developer**: Prabhavathi Chirumala
 - **GitHub**: [@prabhavathi11-code](https://github.com/prabhavathi11-code)
-- **Email**: `prabhavathichirumala326@gmail.com`
-- **Project Repository**: [django-taskpulse](https://github.com/prabhavathi11-code/django-taskpulse)
+- **Repository**: [django-taskpulse](https://github.com/prabhavathi11-code/django-taskpulse)

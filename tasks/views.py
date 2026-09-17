@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
+from django.views.decorators.http import require_POST, require_http_methods
 from .models import Task
 from .forms import TaskForm
 
+@require_http_methods(["GET"])
 def task_list(request):
     tasks = Task.objects.all()
 
@@ -61,6 +63,7 @@ def task_list(request):
     }
     return render(request, 'tasks/task_list.html', context)
 
+@require_http_methods(["GET", "POST"])
 def task_create(request):
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -74,6 +77,7 @@ def task_create(request):
         form = TaskForm()
     return render(request, 'tasks/task_form.html', {'form': form, 'action': 'Create'})
 
+@require_http_methods(["GET", "POST"])
 def task_update(request, pk):
     task = get_object_or_404(Task, pk=pk)
     if request.method == 'POST':
@@ -88,6 +92,7 @@ def task_update(request, pk):
         form = TaskForm(instance=task)
     return render(request, 'tasks/task_form.html', {'form': form, 'task': task, 'action': 'Edit'})
 
+@require_http_methods(["GET", "POST"])
 def task_delete(request, pk):
     task = get_object_or_404(Task, pk=pk)
     if request.method == 'POST':
@@ -97,17 +102,18 @@ def task_delete(request, pk):
         return redirect('tasks:list')
     return render(request, 'tasks/task_confirm_delete.html', {'task': task})
 
+@require_POST
 def task_toggle(request, pk):
     task = get_object_or_404(Task, pk=pk)
-    if request.method == 'POST':
-        if task.status == Task.Status.COMPLETED:
-            task.status = Task.Status.PENDING
-        else:
-            task.status = Task.Status.COMPLETED
-        task.save()
-        messages.info(request, f'Status updated for "{task.title}".')
+    if task.status == Task.Status.COMPLETED:
+        task.status = Task.Status.PENDING
+    else:
+        task.status = Task.Status.COMPLETED
+    task.save()
+    messages.info(request, f'Status updated for "{task.title}".')
     return redirect('tasks:list')
 
+@require_http_methods(["GET"])
 def health_check(request):
     return JsonResponse({
         'status': 'healthy',
@@ -115,3 +121,4 @@ def health_check(request):
         'database': 'connected',
         'total_tasks': Task.objects.count()
     })
+
