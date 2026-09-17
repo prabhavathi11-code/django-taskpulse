@@ -9,13 +9,12 @@
 
 ---
 
-## 🔗 Local Host URLs & Application Access
+## 🌐 Live Demo & Application Access
 
-When the Django development server is running locally (`python manage.py runserver`), access the application at:
-
-| Service | Local URL | Description |
+| Service | URL | Notes / Access |
 | :--- | :--- | :--- |
-| 🌐 **Main Dashboard** | [http://localhost:8000/](http://localhost:8000/) or [http://127.0.0.1:8000/](http://127.0.0.1:8000/) | Live sprint metrics, search, filter, and task management |
+| 🚀 **Live Demo URL** | [https://taskpulse-prabhavathi.loca.lt](https://taskpulse-prabhavathi.loca.lt) | **Active Live Tunnel** (Enter Password if prompted: `103.160.27.42`) |
+| 🌐 **Local Dashboard** | [http://localhost:8000/](http://localhost:8000/) | Live sprint metrics, search, filter, and task management |
 | 🩺 **Health Check** | [http://127.0.0.1:8000/health/](http://127.0.0.1:8000/health/) | JSON health status probe for uptime monitoring |
 | ⚙️ **Django Admin** | [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) | Administrative management portal |
 
