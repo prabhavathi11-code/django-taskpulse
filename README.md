@@ -11,11 +11,12 @@
 
 ## 🌐 Live Demo & Application Access
 
-| Service | URL | Notes / Access |
+| Service | URL | Access Notes |
 | :--- | :--- | :--- |
-| 🚀 **Live Demo URL** | [https://taskpulse-prabhavathi.loca.lt](https://taskpulse-prabhavathi.loca.lt) | **Active Live Tunnel** (Enter Password if prompted: `103.160.27.42`) |
-| 🌐 **Local Dashboard** | [http://localhost:8000/](http://localhost:8000/) | Live sprint metrics, search, filter, and task management |
-| 🩺 **Health Check** | [http://127.0.0.1:8000/health/](http://127.0.0.1:8000/health/) | JSON health status probe for uptime monitoring |
+| ⚡ **Direct Live Demo URL** | [https://implementing-lee-patricia-cool.trycloudflare.com](https://implementing-lee-patricia-cool.trycloudflare.com) | **Direct Instant Access** (No IP / No Password required) |
+| 🌐 **Alternative Live Tunnel** | [https://taskpulse-prabhavathi.loca.lt](https://taskpulse-prabhavathi.loca.lt) | Tunnel backup (Host IP: `103.160.27.42`) |
+| 💻 **Local Dashboard** | [http://localhost:8000/](http://localhost:8000/) | Local sprint metrics, search & filter |
+| 🩺 **Health Check** | [http://127.0.0.1:8000/health/](http://127.0.0.1:8000/health/) | JSON health status probe |
 | ⚙️ **Django Admin** | [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) | Administrative management portal |
 
 ---

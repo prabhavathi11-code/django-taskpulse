@@ -44,5 +44,5 @@ staticfiles/
 .idea/
 *.swp
 *.swo
-.DS_Store
-Thumbs.db
+# Local binaries & tools
+cloudflared.exe
