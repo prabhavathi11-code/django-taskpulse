@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TaskPulse — Modern Task & Project Management{% endblock %}</title>
+    <meta name="description" content="TaskPulse is a sleek, production-ready Django project management dashboard with real-time metrics and task tracking.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Top Navigation Bar -->
+        <header class="navbar">
+            <div class="navbar-container">
+                <a href="{% url 'tasks:list' %}" class="brand">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                    </div>
+                    <div class="brand-text">
+                        <span class="brand-name">TaskPulse</span>
+                        <span class="brand-badge">Django 6.1</span>
+                    </div>
+                </a>
+
+                <div class="nav-actions">
+                    <a href="{% url 'tasks:list' %}" class="nav-link active">
+                        <i class="fa-solid fa-table-columns"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="{% url 'tasks:health' %}" target="_blank" class="nav-link">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                        <span>API Health</span>
+                    </a>
+                    <a href="https://github.com/prabhavathi11-code" target="_blank" class="nav-link github-btn">
+                        <i class="fa-brands fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                    <button class="btn btn-primary" id="openCreateModalBtn">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Task</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notification Messages -->
+        {% if messages %}
+        <div class="toast-container" id="toastContainer">
+            {% for message in messages %}
+            <div class="toast toast-{{ message.tags }}">
+                <div class="toast-icon">
+                    {% if message.tags == 'success' %}
+                    <i class="fa-solid fa-circle-check"></i>
+                    {% elif message.tags == 'error' %}
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    {% else %}
+                    <i class="fa-solid fa-circle-info"></i>
+                    {% endif %}
+                </div>
+                <div class="toast-message">{{ message }}</div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <p>&copy; 2026 TaskPulse Django App &bull; Built with Django, WhiteNoise &amp; Modern CSS</p>
+                <div class="footer-links">
+                    <span class="status-pill status-live">
+                        <span class="pulse-dot"></span> CI/CD Active
+                    </span>
+                    <a href="{% url 'tasks:health' %}" class="footer-link">System Status</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
