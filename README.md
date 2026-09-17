@@ -99,85 +99,14 @@ The core model is defined in `tasks/models.py`:
 
 ---
 
-## 🚀 Getting Started
+## 🔗 Local Host URLs & Application Access
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/prabhavathi11-code/django-taskpulse.git
-cd django-taskpulse
-```
+When the development server is running locally, access the application via:
 
-### 2. Set Up Virtual Environment
-```bash
-# Windows
-py -m venv .venv
-.venv\Scripts\activate
+- 🌐 **Web App Dashboard**: [http://localhost:8000/](http://localhost:8000/) or [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+- 🩺 **Health Check Endpoint**: [http://127.0.0.1:8000/health/](http://127.0.0.1:8000/health/)
+- ⚙️ **Django Admin Portal**: [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/)
 
-# macOS / Linux
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-### 3. Install Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Database Migrations
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-### 5. Seed Sample Tasks (Instant Demo Data)
-```bash
-python manage.py seed_sample_data
-```
-
-### 6. Run Local Development Server
-```bash
-python manage.py runserver
-```
-Navigate to **[http://127.0.0.1:8000/](http://127.0.0.1:8000/)** in your browser.
-
----
-
-## 🧪 Automated Testing & Verification
-
-The project includes unit tests for data models, CRUD views, query filters, and API health checks.
-
-To run tests:
-```bash
-python manage.py test
-```
-
-Expected Output:
-```text
-Creating test database for alias 'default'...
-..........
-----------------------------------------------------------------------
-Ran 10 tests in 0.197s
-
-OK
-Destroying test database for alias 'default'...
-```
-
----
-
-## 🌐 Deployment Guide
-
-### Option 1: Render.com (Recommended - 1 Click)
-1. Push this repository to your GitHub account (`prabhavathi11-code`).
-2. Log into [Render.com](https://render.com) and click **New > Blueprint**.
-3. Select this repository. Render reads `render.yaml` and deploys automatically:
-   - **Build Command**: `pip install -r requirements.txt && python manage.py collectstatic --no-input && python manage.py migrate`
-   - **Start Command**: `gunicorn config.wsgi:application`
-
-### Option 2: Heroku / Railway / Fly.io
-Use the included `Procfile`:
-```text
-web: gunicorn config.wsgi:application --log-file -
-```
 
 ---
 
