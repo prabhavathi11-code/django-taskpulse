@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard — TaskPulse{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="page-title">Project &amp; Task Pulse</h1>
+            <p class="page-subtitle">Track, organize, and accelerate your engineering sprints in real time.</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-primary" onclick="openCreateModal()">
+                <i class="fa-solid fa-circle-plus"></i>
+                <span>Add New Task</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Metrics Cards Grid -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-icon-wrap icon-total">
+                <i class="fa-solid fa-list-check"></i>
+            </div>
+            <div class="metric-info">
+                <span class="metric-label">Total Tasks</span>
+                <span class="metric-value">{{ total_count }}</span>
+            </div>
+            <div class="metric-sparkle"></div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon-wrap icon-completed">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="metric-info">
+                <span class="metric-label">Completed</span>
+                <span class="metric-value">{{ completed_count }}</span>
+            </div>
+            <div class="metric-progress-wrapper">
+                <div class="metric-progress-bar" style="width: {{ completion_rate }}%;"></div>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon-wrap icon-pending">
+                <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+            <div class="metric-info">
+                <span class="metric-label">Pending / In Progress</span>
+                <span class="metric-value">{{ pending_count|add:in_progress_count }}</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon-wrap icon-priority">
+                <i class="fa-solid fa-fire"></i>
+            </div>
+            <div class="metric-info">
+                <span class="metric-label">High Priority</span>
+                <span class="metric-value">{{ high_priority_count }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls: Search & Filters -->
+    <div class="controls-panel">
+        <form method="GET" action="{% url 'tasks:list' %}" class="filter-form" id="filterForm">
+            <div class="search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" name="q" value="{{ search_query }}" placeholder="Search tasks by title or details..." class="search-input">
+                {% if search_query %}
+                <a href="{% url 'tasks:list' %}" class="search-clear">
+                    <i class="fa-solid fa-xmark"></i>
+                </a>
+                {% endif %}
+            </div>
+
+            <div class="filters-wrap">
+                <select name="status" class="filter-select" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">All Statuses</option>
+                    {% for key, label in statuses %}
+                    <option value="{{ key }}" {% if selected_status == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="priority" class="filter-select" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">All Priorities</option>
+                    {% for key, label in priorities %}
+                    <option value="{{ key }}" {% if selected_priority == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+
+                <select name="category" class="filter-select" onchange="document.getElementById('filterForm').submit()">
+                    <option value="">All Categories</option>
+                    {% for key, label in categories %}
+                    <option value="{{ key }}" {% if selected_category == key %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+
+                {% if search_query or selected_status or selected_priority or selected_category %}
+                <a href="{% url 'tasks:list' %}" class="btn btn-secondary btn-sm">
+                    <i class="fa-solid fa-rotate-left"></i> Reset
+                </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Tasks Grid / List -->
+    {% if tasks %}
+    <div class="tasks-grid">
+        {% for task in tasks %}
+        <div class="task-card {% if task.is_completed %}task-completed{% endif %}">
+            <div class="task-card-header">
+                <div class="task-badges">
+                    <span class="badge badge-category badge-cat-{{ task.category|lower }}">
+                        {{ task.get_category_display }}
+                    </span>
+                    <span class="badge badge-priority badge-prio-{{ task.priority|lower }}">
+                        <span class="dot"></span> {{ task.get_priority_display }}
+                    </span>
+                    <span class="badge badge-status badge-status-{{ task.status|lower }}">
+                        {{ task.get_status_display }}
+                    </span>
+                </div>
+
+                <div class="task-actions">
+                    <a href="{% url 'tasks:update' task.pk %}" class="icon-btn" title="Edit Task">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                    <a href="{% url 'tasks:delete' task.pk %}" class="icon-btn icon-btn-danger" title="Delete Task">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="task-card-body">
+                <h3 class="task-title">{{ task.title }}</h3>
+                {% if task.description %}
+                <p class="task-desc">{{ task.description|linebreaksbr }}</p>
+                {% endif %}
+            </div>
+
+            <div class="task-card-footer">
+                <div class="task-meta">
+                    {% if task.due_date %}
+                    <span class="task-due {% if task.is_overdue %}overdue{% endif %}">
+                        <i class="fa-regular fa-calendar"></i>
+                        {{ task.due_date|date:"M d, Y" }}
+                        {% if task.is_overdue %}<span class="overdue-tag">Overdue</span>{% endif %}
+                    </span>
+                    {% else %}
+                    <span class="task-due-none">No due date</span>
+                    {% endif %}
+                </div>
+
+                <form method="POST" action="{% url 'tasks:toggle' task.pk %}" class="toggle-form">
+                    {% csrf_token %}
+                    <button type="submit" class="toggle-status-btn {% if task.is_completed %}active{% endif %}">
+                        {% if task.is_completed %}
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span>Completed</span>
+                        {% else %}
+                        <i class="fa-regular fa-circle"></i>
+                        <span>Mark Done</span>
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fa-solid fa-clipboard-question"></i>
+        </div>
+        <h3>No tasks found</h3>
+        <p>No tasks match your current search or filter criteria. Create a new task or reset filters to get started.</p>
+        <button class="btn btn-primary" onclick="openCreateModal()">
+            <i class="fa-solid fa-plus"></i> Create First Task
+        </button>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal: Quick Create Task -->
+<div class="modal-overlay" id="createModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2 class="modal-title">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Create New Task
+            </h2>
+            <button class="modal-close" onclick="closeCreateModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <form method="POST" action="{% url 'tasks:create' %}" class="modal-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.title.id_for_label }}" class="form-label">Task Title *</label>
+                {{ form.title }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                {{ form.description }}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-half">
+                    <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
+                    {{ form.category }}
+                </div>
+                <div class="form-group col-half">
+                    <label for="{{ form.priority.id_for_label }}" class="form-label">Priority</label>
+                    {{ form.priority }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-half">
+                    <label for="{{ form.status.id_for_label }}" class="form-label">Initial Status</label>
+                    {{ form.status }}
+                </div>
+                <div class="form-group col-half">
+                    <label for="{{ form.due_date.id_for_label }}" class="form-label">Target Due Date</label>
+                    {{ form.due_date }}
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeCreateModal()">Cancel</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa-solid fa-check"></i> Save Task
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
