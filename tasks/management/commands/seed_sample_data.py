@@ -2,13 +2,27 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 from datetime import timedelta
 from tasks.models import Task
+from django.contrib.auth import get_user_model
 
 class Command(BaseCommand):
     help = 'Seeds sample tasks into the database for demonstration'
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Force re-seed even if tasks already exist',
+        )
+
     def handle(self, *args, **options):
-        if Task.objects.exists():
-            self.stdout.write(self.style.WARNING('Tasks already exist in the database.'))
+        # Auto-create superuser if none exists
+        User = get_user_model()
+        if not User.objects.filter(is_superuser=True).exists():
+            User.objects.create_superuser('admin', 'admin@taskpulse.com', 'admin123')
+            self.stdout.write(self.style.SUCCESS('Superuser "admin" created (password: admin123)'))
+
+        if Task.objects.exists() and not options.get('force'):
+            self.stdout.write(self.style.WARNING('Tasks already exist in the database. Use --force to re-seed.'))
             return
 
         today = timezone.now().date()
