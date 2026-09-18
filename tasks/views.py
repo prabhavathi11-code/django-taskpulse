@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_http_methods
+from django.contrib.auth import get_user_model
 from .models import Task
 from .forms import TaskForm
 
@@ -122,3 +123,19 @@ def health_check(request):
         'total_tasks': Task.objects.count()
     })
 
+@require_http_methods(["GET"])
+def setup_admin(request):
+    """One-time endpoint to create admin superuser on live server."""
+    User = get_user_model()
+    if User.objects.filter(is_superuser=True).exists():
+        return JsonResponse({
+            'status': 'already_exists',
+            'message': 'Superuser already exists. Login at /admin/ with username: admin',
+        })
+    User.objects.create_superuser('admin', 'admin@taskpulse.com', 'admin123')
+    return JsonResponse({
+        'status': 'created',
+        'message': 'Superuser created! Login at /admin/',
+        'username': 'admin',
+        'password': 'admin123',
+    })
