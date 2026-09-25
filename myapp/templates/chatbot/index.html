@@ -1,0 +1,261 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusAI Studio | Advanced AI Assistant</title>
+    <meta name="description" content="An advanced, intelligent AI Chatbot built with Django, featuring rich formatting, code execution helpers, and voice interaction.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Highlight.js for Code Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'chatbot/css/style.css' %}">
+</head>
+<body class="dark-mode">
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h3>Nexus<span>AI</span></h3>
+                        <span class="badge">Django Pro</span>
+                    </div>
+                </div>
+                <button class="icon-btn mobile-close-btn" id="closeSidebarBtn" title="Close Sidebar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- New Chat CTA -->
+            <div class="new-chat-wrapper">
+                <button class="btn btn-primary new-chat-btn" id="newChatBtn">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>New Conversation</span>
+                    <kbd>Ctrl+N</kbd>
+                </button>
+            </div>
+
+            <!-- Model Selector -->
+            <div class="model-picker-container">
+                <label><i class="fa-solid fa-microchip"></i> Engine Model</label>
+                <div class="custom-select">
+                    <select id="modelSelector">
+                        <option value="nexus-core">Nexus-Core (Built-in Ultra)</option>
+                        <option value="gemini-1.5">Gemini 1.5 Flash (Superfast)</option>
+                        <option value="gpt-4o-mini">GPT-4o Mini (OpenAI)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Chat History -->
+            <div class="history-section">
+                <div class="history-header">
+                    <span>Recent Chats</span>
+                    <button class="clear-history-icon-btn" id="clearAllBtn" title="Clear all history">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>
+                <div class="history-list" id="historyList">
+                    {% for conv in conversations %}
+                    <div class="history-item" data-id="{{ conv.id }}">
+                        <i class="fa-regular fa-message"></i>
+                        <span class="item-title">{{ conv.title }}</span>
+                        <button class="delete-conv-btn" data-id="{{ conv.id }}" title="Delete chat">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                    {% empty %}
+                    <div class="empty-history" id="emptyHistoryMsg">
+                        <i class="fa-regular fa-comment-dots"></i>
+                        <p>No conversations yet. Start one!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <button class="footer-action-btn" id="settingsBtn">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>API & Settings</span>
+                </button>
+                <div class="user-profile-badge">
+                    <div class="avatar-circle">P</div>
+                    <div class="user-meta">
+                        <span class="user-name">Developer Hub</span>
+                        <span class="status-indicator"><span class="dot"></span> Online</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-viewport">
+            <!-- Top Navbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="icon-btn sidebar-toggle-btn" id="openSidebarBtn" title="Toggle Sidebar">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
+                    <div class="active-chat-info">
+                        <h4 id="activeChatTitle">New Session</h4>
+                        <span class="model-tag" id="currentModelTag"><i class="fa-solid fa-bolt"></i> Nexus Core</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <button class="icon-btn" id="exportChatBtn" title="Export conversation to Markdown">
+                        <i class="fa-solid fa-arrow-down-to-bracket"></i>
+                    </button>
+                    <button class="icon-btn" id="toggleThemeBtn" title="Toggle Light/Dark Theme">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </button>
+                    <a href="https://github.com" target="_blank" class="github-badge-btn" title="View on GitHub">
+                        <i class="fa-brands fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </header>
+
+            <!-- Chat Messages Display -->
+            <div class="chat-container" id="chatContainer">
+                <!-- Welcome Hero (visible when no messages exist) -->
+                <div class="welcome-hero" id="welcomeHero">
+                    <div class="hero-logo-orb">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h1>What can I build or answer for you?</h1>
+                    <p class="hero-subtext">Harness next-generation AI intelligence inside your Django workspace with real-time markdown, syntax-highlighted code, and full context memory.</p>
+
+                    <!-- Suggestion Chips -->
+                    <div class="suggestion-grid">
+                        <div class="prompt-chip" data-prompt="Explain Django's MVT pattern with visual diagrams and code examples.">
+                            <div class="chip-icon"><i class="fa-brands fa-python"></i></div>
+                            <div class="chip-text">
+                                <strong>Django MVT Guide</strong>
+                                <span>Architecture & workflow explained</span>
+                            </div>
+                        </div>
+                        <div class="prompt-chip" data-prompt="How do I deploy this Django project live on GitHub and Cloud hosting?">
+                            <div class="chip-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                            <div class="chip-text">
+                                <strong>Deploy Live</strong>
+                                <span>GitHub & Cloud deployment steps</span>
+                            </div>
+                        </div>
+                        <div class="prompt-chip" data-prompt="Write a clean Python function with typing and comprehensive error handling.">
+                            <div class="chip-icon"><i class="fa-solid fa-code"></i></div>
+                            <div class="chip-text">
+                                <strong>Clean Python Code</strong>
+                                <span>Production-grade functions & patterns</span>
+                            </div>
+                        </div>
+                        <div class="prompt-chip" data-prompt="Hello! Explain how this AI chatbot is built inside Django.">
+                            <div class="chip-icon"><i class="fa-solid fa-robot"></i></div>
+                            <div class="chip-text">
+                                <strong>How this Bot Works</strong>
+                                <span>Views, Models, and API handlers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Message Stream -->
+                <div class="messages-stream" id="messagesStream">
+                    <!-- Populated dynamically by JavaScript -->
+                </div>
+
+                <!-- Typing indicator -->
+                <div class="typing-bubble" id="typingBubble" style="display: none;">
+                    <div class="assistant-avatar">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div class="typing-animation">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Floating Prompt Area -->
+            <footer class="prompt-dock">
+                <div class="prompt-box-card">
+                    <div class="prompt-input-wrapper">
+                        <textarea
+                            id="promptInput"
+                            rows="1"
+                            placeholder="Message NexusAI... (Shift+Enter for new line)"
+                            autocomplete="off"
+                        ></textarea>
+                    </div>
+                    <div class="prompt-actions">
+                        <div class="action-left">
+                            <button class="voice-btn" id="voiceBtn" title="Voice Input (Speech-to-Text)">
+                                <i class="fa-solid fa-microphone" id="voiceIcon"></i>
+                            </button>
+                            <span class="char-count" id="charCount">0/4000</span>
+                        </div>
+                        <button class="send-btn" id="sendBtn" title="Send Message">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="prompt-disclaimer">
+                    <i class="fa-solid fa-shield-halved"></i> Powered by Django 6.1 & Smart AI Logic • Free & Extensible with API keys
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop" id="settingsModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-sliders"></i> Engine Configuration</h3>
+                <button class="icon-btn" id="closeSettingsBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="customApiKey">OpenAI / Gemini API Key (Optional)</label>
+                    <input type="password" id="customApiKey" placeholder="sk-... or AIza..." class="form-control">
+                    <small>Leave blank to utilize the included built-in smart AI reasoning engine without paying any fees.</small>
+                </div>
+                <div class="form-group">
+                    <label for="systemRole">Custom System Instructions</label>
+                    <textarea id="systemRole" rows="3" class="form-control" placeholder="You are an expert Python and Django full-stack developer..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Speech Output</label>
+                    <div class="toggle-switch-wrapper">
+                        <input type="checkbox" id="autoSpeechToggle">
+                        <label for="autoSpeechToggle" class="switch-label">Automatically read assistant responses aloud</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelSettingsBtn">Cancel</button>
+                <button class="btn btn-primary" id="saveSettingsBtn">Save Preferences</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="appToast">Copied to clipboard!</div>
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- Custom Chat Engine Script -->
+    <script src="{% static 'chatbot/js/chat.js' %}"></script>
+</body>
+</html>
