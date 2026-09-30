@@ -5,7 +5,7 @@ An advanced, production-grade AI Chatbot web application built with **Django 6**
 ---
     
 ## ✨ Features
-
+               
 - 🧠 **Multi-Model Intelligence**:
   - **Built-in Smart Engine**: Zero-setup intelligent reasoning, code generation, and Django architecture recommendations.
   - **Google Gemini & OpenAI Integration**: Plug in your API keys in the Settings modal or environment variables to tap directly into live LLMs.
